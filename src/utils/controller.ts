@@ -11,7 +11,7 @@ import { env } from "@/env";
 import { readdirSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
-import { Logs } from "./logs";
+import { Logs } from "@/utils/logs";
 
 Logs.info("Running in", env.NODE_ENV);
 

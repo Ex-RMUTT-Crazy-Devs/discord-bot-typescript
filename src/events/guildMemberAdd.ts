@@ -1,6 +1,6 @@
 import { Events, type GuildMember } from "discord.js";
-import { client } from "../utils/controller";
-import { Logs } from "../utils/logs";
+import { client } from "@/utils/controller";
+import { Logs } from "@/utils/logs";
 import { env } from "@/env";
 
 client.on(Events.GuildMemberAdd, async (member: GuildMember) => {

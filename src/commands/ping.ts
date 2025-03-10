@@ -1,5 +1,5 @@
 import { type Interaction, SlashCommandBuilder } from "discord.js";
-import { reply } from "../utils/discord";
+import { reply } from "@/utils/discord";
 
 export const data = new SlashCommandBuilder()
 	.setName("ping")
