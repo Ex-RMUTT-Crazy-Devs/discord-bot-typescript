@@ -2,9 +2,11 @@ import {
 	Client,
 	Collection,
 	GatewayIntentBits,
+	type Interaction,
 	REST,
 	type RESTPostAPIApplicationCommandsJSONBody,
 	Routes,
+	type SlashCommandBuilder,
 } from "discord.js";
 import { env } from "@/env";
 
@@ -31,7 +33,13 @@ readdirSync(path.join(__dirname, "../events/"))
 		import(`../events/${file.replace(".ts", "")}`);
 	});
 
-export const commands = new Collection();
+export const commands = new Collection<
+	string,
+	{
+		data: SlashCommandBuilder;
+		execute: (interaction: Interaction) => void | Promise<void>;
+	}
+>();
 const slashCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
 readdir(path.join(__dirname, "../commands/"))
