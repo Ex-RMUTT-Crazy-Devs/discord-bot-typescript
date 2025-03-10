@@ -24,10 +24,10 @@ export const client = new Client({
   ],
 });
 
-import "@/events/clientReady";
-import "@/events/guildMemberAdd";
-import "@/events/interactionCreate";
-import "@/events/messageCreate";
+await import("@/events/clientReady");
+await import("@/events/guildMemberAdd");
+await import("@/events/interactionCreate");
+await import("@/events/messageCreate");
 
 export const commands = new Collection<
   string,
