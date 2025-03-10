@@ -1,4 +1,4 @@
-import type { Interaction } from "discord.js";
+import { MessageFlags, type Interaction } from "discord.js";
 
 export const reply = async (
 	interaction: Interaction,
@@ -8,7 +8,7 @@ export const reply = async (
 	if (interaction.isChatInputCommand()) {
 		const rp = await interaction.reply({
 			content,
-			ephemeral: _private,
+			...(_private && { flags: MessageFlags.Ephemeral }),
 		});
 
 		if (_private) {
