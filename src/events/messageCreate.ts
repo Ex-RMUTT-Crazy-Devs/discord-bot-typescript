@@ -38,7 +38,7 @@ client.on(
 
 				await message.delete();
 
-				await fetch(process.env.WEBHOOK_URL_CHANNEL_ANONYMOUS!, {
+				await fetch(env.WEBHOOK_URL_CHANNEL_ANONYMOUS, {
 					method: "POST",
 					body: formData,
 				});
