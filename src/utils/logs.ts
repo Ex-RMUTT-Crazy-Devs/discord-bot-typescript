@@ -1,13 +1,13 @@
-export class Logs {
-  static info(...msg: any[]) {
-    console.log("[INFO]", new Date().toLocaleString(), ":", ...msg);
-  }
+export const Logs = {
+	info(...msg: unknown[]): void {
+		console.log("[INFO]", new Date().toLocaleString(), ":", ...msg);
+	},
 
-  static error(...msg: any[]) {
-    console.log("[ERROR]", new Date().toLocaleString(), ":", ...msg);
-  }
+	error(...msg: unknown[]): void {
+		console.error("[ERROR]", new Date().toLocaleString(), ":", ...msg);
+	},
 
-  static warning(...msg: any[]) {
-    console.log("[WARNING]", new Date().toLocaleString(), ":", ...msg);
-  }
-}
+	warning(...msg: unknown[]): void {
+		console.warn("[WARNING]", new Date().toLocaleString(), ":", ...msg);
+	},
+};
