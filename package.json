@@ -1,0 +1,18 @@
+{
+  "name": "discord-bot-typescript",
+  "description": "Discord bot using TypeScript",
+  "version": "0.0.2",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "bun --env-file=.env.prod src/index.ts",
+    "dev": "bun --env-file=.env.dev src/index.ts",
+    "start:dev": "nodemon --watch src --ext ts --exec \"bun run dev\""
+  },
+  "dependencies": {
+    "discord.js": "^14.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7"
+  }
+}
