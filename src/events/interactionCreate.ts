@@ -1,4 +1,4 @@
-import { Events } from "discord.js";
+import { Events, type SlashCommandBuilder, type Interaction } from "discord.js";
 import { client, commands } from "@/utils/controller";
 import { reply } from "@/utils/discord";
 import { Logs } from "@/utils/logs";
@@ -7,7 +7,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
 	// what the fuck
-	const command = commands.get(interaction.commandName) as any;
+	const command = commands.get(interaction.commandName) as
+		| {
+				data: SlashCommandBuilder;
+				execute: (interaction: Interaction) => void | Promise<void>;
+		  }
+		| undefined;
 
 	if (!command) {
 		Logs.info(`No command matching ${interaction.commandName} was found.`);
