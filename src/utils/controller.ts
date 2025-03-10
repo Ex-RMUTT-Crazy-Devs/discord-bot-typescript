@@ -1,13 +1,13 @@
 import { env } from "@/env";
 import {
-	Client,
-	Collection,
-	GatewayIntentBits,
-	type Interaction,
-	REST,
-	type RESTPostAPIApplicationCommandsJSONBody,
-	Routes,
-	type SlashCommandBuilder,
+  Client,
+  Collection,
+  GatewayIntentBits,
+  type Interaction,
+  REST,
+  type RESTPostAPIApplicationCommandsJSONBody,
+  Routes,
+  type SlashCommandBuilder,
 } from "discord.js";
 
 import { Logs } from "@/utils/logs";
@@ -15,49 +15,57 @@ import { Logs } from "@/utils/logs";
 Logs.info("Running in", env.NODE_ENV);
 
 export const client = new Client({
-	intents: [
-		GatewayIntentBits.Guilds,
-		GatewayIntentBits.GuildMembers,
-		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.GuildMessageReactions,
-		GatewayIntentBits.MessageContent,
-	],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.MessageContent,
+  ],
 });
 
-await import("@/events/clientReady");
-await import("@/events/guildMemberAdd");
-await import("@/events/interactionCreate");
-await import("@/events/messageCreate");
-
 export const commands = new Collection<
-	string,
-	{
-		data: SlashCommandBuilder;
-		execute: (interaction: Interaction) => void | Promise<void>;
-	}
+  string,
+  {
+    data: SlashCommandBuilder;
+    execute: (interaction: Interaction) => void | Promise<void>;
+  }
 >();
 const slashCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
-const cmds = [await import("@/commands/ping"), await import("@/commands/pong")];
-for (const cmd of cmds) {
-	commands.set(cmd.data.name, { data: cmd.data, execute: cmd.execute });
-	slashCommands.push(cmd.data.toJSON());
-}
+(async () => {
+  await import("@/events/clientReady");
+  await import("@/events/guildMemberAdd");
+  await import("@/events/interactionCreate");
+  await import("@/events/messageCreate");
 
-try {
-	const rest = new REST().setToken(env.DISCORD_TOKEN);
+  const cmds = [
+    await import("@/commands/ping"),
+    await import("@/commands/pong"),
+  ];
+  for (const cmd of cmds) {
+    commands.set(cmd.data.name, { data: cmd.data, execute: cmd.execute });
+    slashCommands.push(cmd.data.toJSON());
+  }
 
-	Logs.info(
-		`Started refreshing ${slashCommands.length} application (/) commands.`,
-	);
+  try {
+    const rest = new REST().setToken(env.DISCORD_TOKEN);
 
-	await rest.put(Routes.applicationGuildCommands(env.CLIENT_ID, env.GUILD_ID), {
-		body: slashCommands,
-	});
+    Logs.info(
+      `Started refreshing ${slashCommands.length} application (/) commands.`
+    );
 
-	Logs.info(
-		`Successfully reloaded ${slashCommands.length} application (/) commands.`,
-	);
-} catch (error) {
-	Logs.error("Routes.applicationGuildCommands", error);
-}
+    await rest.put(
+      Routes.applicationGuildCommands(env.CLIENT_ID, env.GUILD_ID),
+      {
+        body: slashCommands,
+      }
+    );
+
+    Logs.info(
+      `Successfully reloaded ${slashCommands.length} application (/) commands.`
+    );
+  } catch (error) {
+    Logs.error("Routes.applicationGuildCommands", error);
+  }
+})();
