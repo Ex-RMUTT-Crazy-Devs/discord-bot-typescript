@@ -28,7 +28,11 @@ export const client = new Client({
 
 // Event
 for (const event of events) {
-	(event.type === "on" ? client.on : client.once)(event.type, event.callback);
+	if (event.type === "on") {
+		client.once(event.type, event.callback);
+	} else {
+		client.once(event.type, event.callback);
+	}
 }
 
 export const commands = new Collection<
