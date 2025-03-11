@@ -1,7 +1,7 @@
 import { Events } from "discord.js";
 import { Logs } from "@/utils/logs";
 import { env } from "@/env";
-import { createListener } from "@/events/allEvents";
+import { createListener } from "@/utils/eventListener";
 
 const run = "on";
 const eventType = Events.MessageCreate;

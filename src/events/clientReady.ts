@@ -1,6 +1,6 @@
 import { Events } from "discord.js";
 import { Logs } from "@/utils/logs";
-import { createListener } from "@/events/allEvents";
+import { createListener } from "@/utils/eventListener";
 
 const run = "once";
 const eventType = Events.ClientReady;
