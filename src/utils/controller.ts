@@ -29,7 +29,7 @@ export const client = new Client({
 // Event
 for (const event of events) {
 	if (event.type === "on") {
-		client.once(event.type, event.callback);
+		client.on(event.type, event.callback);
 	} else {
 		client.once(event.type, event.callback);
 	}
