@@ -1,9 +1,12 @@
-import { Events, type GuildMember } from "discord.js";
-import { client } from "@/utils/controller";
+import { Events } from "discord.js";
 import { Logs } from "@/utils/logs";
 import { env } from "@/env";
+import { createListener } from "@/events/allEvents";
 
-client.on(Events.GuildMemberAdd, async (member: GuildMember) => {
+const run = "on";
+const eventType = Events.GuildMemberAdd;
+
+export default createListener(run, eventType, async (member) => {
 	try {
 		const guild = member.guild;
 

@@ -1,9 +1,13 @@
 import { Events, MessageFlags } from "discord.js";
-import { client, commands } from "@/utils/controller";
+import { commands } from "@/utils/controller";
 import { reply } from "@/utils/discord";
 import { Logs } from "@/utils/logs";
+import { createListener } from "@/events/allEvents";
 
-client.on(Events.InteractionCreate, async (interaction) => {
+const run = "on";
+const eventType = Events.InteractionCreate;
+
+export default createListener(run, eventType, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return;
 
 	// what the fuck

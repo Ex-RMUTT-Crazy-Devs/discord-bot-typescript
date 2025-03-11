@@ -1,50 +1,45 @@
-import {
-	Events,
-	type Message,
-	type OmitPartialGroupDMChannel,
-} from "discord.js";
-import { client } from "@/utils/controller";
+import { Events } from "discord.js";
 import { Logs } from "@/utils/logs";
 import { env } from "@/env";
+import { createListener } from "@/events/allEvents";
 
-client.on(
-	Events.MessageCreate,
-	async (message: OmitPartialGroupDMChannel<Message<boolean>>) => {
-		if (message.author.bot) return;
+const run = "on";
+const eventType = Events.MessageCreate;
 
-		// anonymous send
-		if (message.channelId === env.BOT_SEND_MSG_CHANNEL_ID) {
-			try {
-				const formData = new FormData();
-				formData.append(
-					"payload_json",
-					JSON.stringify({ content: message.content }),
-				);
+export default createListener(run, eventType, async (message) => {
+	if (message.author.bot) return;
 
-				const files = message.attachments.map((attachment) => ({
-					url: attachment.url,
-					name: attachment.name,
-				}));
+	if (message.channelId !== env.BOT_SEND_MSG_CHANNEL_ID) return;
 
-				// ดึงไฟล์จาก URL และแนบใน FormData
-				const fetchPromises = files.map(async (file, index) => {
-					const response = await fetch(file.url);
-					if (!response.ok)
-						throw new Error(`Failed to fetch file: ${file.url}`);
-					const blob = await response.blob();
-					formData.append(`files[${index}]`, blob, file.name);
-				});
-				await Promise.all(fetchPromises);
+	// anonymous send
+	try {
+		const formData = new FormData();
+		formData.append(
+			"payload_json",
+			JSON.stringify({ content: message.content }),
+		);
 
-				await message.delete();
+		const files = message.attachments.map((attachment) => ({
+			url: attachment.url,
+			name: attachment.name,
+		}));
 
-				await fetch(env.WEBHOOK_URL_CHANNEL_ANONYMOUS, {
-					method: "POST",
-					body: formData,
-				});
-			} catch (error) {
-				Logs.error("[MessageCreate]", error);
-			}
-		}
-	},
-);
+		// ดึงไฟล์จาก URL และแนบใน FormData
+		const fetchPromises = files.map(async (file, index) => {
+			const response = await fetch(file.url);
+			if (!response.ok) throw new Error(`Failed to fetch file: ${file.url}`);
+			const blob = await response.blob();
+			formData.append(`files[${index}]`, blob, file.name);
+		});
+		await Promise.all(fetchPromises);
+
+		await message.delete();
+
+		await fetch(env.WEBHOOK_URL_CHANNEL_ANONYMOUS, {
+			method: "POST",
+			body: formData,
+		});
+	} catch (error) {
+		Logs.error("[MessageCreate]", error);
+	}
+});
