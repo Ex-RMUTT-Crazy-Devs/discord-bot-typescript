@@ -11,7 +11,8 @@ const envVariables = z.object({
 	NODE_ENV: z
 		.enum(["development", "test", "production"])
 		.default("development"),
-	TZ: z.string().default("Asia/Bangkok"),
+	// TODO: This is useless, you need to config the alpine docker somehow.
+	// TZ: z.string().default("Asia/Bangkok"),
 });
 
 const EnvParse = envVariables.safeParse(process.env);
