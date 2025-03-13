@@ -41,10 +41,13 @@ export const commands = new Collection<
 const slashCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
 (async () => {
-	const cmds = [
-		await import("@/commands/ping"),
-		await import("@/commands/pong"),
+	const commandPromises = [
+		import("@/commands/ping"),
+		import("@/commands/pong"),
 	];
+
+	const cmds = await Promise.all(commandPromises);
+
 	for (const cmd of cmds) {
 		commands.set(cmd.data.name, { data: cmd.data, execute: cmd.execute });
 		slashCommands.push(cmd.data.toJSON());
