@@ -20,7 +20,8 @@ RUN bun build --compile --sourcemap --bytecode src/index.ts --outfile executable
 # copy production dependencies and source code into final image
 FROM alpine:latest AS release
 WORKDIR /app
-RUN apk add libgcc libstdc++
-COPY --from=prerelease /app/executable .
+RUN apk add libgcc libstdc++ tini
+COPY --from=prerelease /app/executable executable
 
-CMD [ "./executable" ]
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["./executable"]
