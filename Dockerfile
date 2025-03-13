@@ -20,7 +20,12 @@ RUN bun build --compile --sourcemap --bytecode src/index.ts --outfile executable
 # copy production dependencies and source code into final image
 FROM alpine:latest AS release
 WORKDIR /app
-RUN apk add libgcc libstdc++ tini
+RUN apk add --no-cache libgcc libstdc++ tini tzdata
+
+# Set timezone based on the TZ environment variable
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 COPY --from=prerelease /app/executable executable
 
 ENTRYPOINT ["/sbin/tini", "--"]
