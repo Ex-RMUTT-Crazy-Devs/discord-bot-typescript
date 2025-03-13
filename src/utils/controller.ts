@@ -27,12 +27,8 @@ export const client = new Client({
 });
 
 // Event
-for (const event of events) {
-	if (event.type === "on") {
-		client.on(event.type, event.callback);
-	} else {
-		client.once(event.type, event.callback);
-	}
+for (const registerEvent of events) {
+	registerEvent(client);
 }
 
 export const commands = new Collection<
