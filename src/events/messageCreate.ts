@@ -3,7 +3,7 @@ import { Logs } from "@/utils/logs";
 import { env } from "@/env";
 
 export default (client: Client) => {
-	client.once(Events.MessageCreate, async (message) => {
+	client.on(Events.MessageCreate, async (message) => {
 		if (message.author.bot) return;
 
 		if (message.channelId !== env.BOT_SEND_MSG_CHANNEL_ID) return;
