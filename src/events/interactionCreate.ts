@@ -1,14 +1,20 @@
-import { type Client, Events, MessageFlags } from "discord.js";
+import { Events, MessageFlags, type ClientEvents } from "discord.js";
 import { commands } from "@/utils/controller";
 import { reply } from "@/utils/discord";
 import { Logs } from "@/utils/logs";
+import type { Event } from "@/utils/events";
 
-export default (client: Client) => {
-	client.on(Events.InteractionCreate, async (interaction) => {
+const type = Events.InteractionCreate;
+
+const event: Event<typeof type> = {
+	name: type,
+	once: false,
+	execute: async (interaction) => {
 		if (!interaction.isChatInputCommand()) return;
 
-		// what the fuck
-		const command = commands.get(interaction.commandName);
+		const command = commands.get(interaction.commandName) as
+			| Event<keyof ClientEvents>
+			| undefined;
 
 		if (!command) {
 			Logs.info(`No command matching ${interaction.commandName} was found.`);
@@ -31,5 +37,7 @@ export default (client: Client) => {
 				);
 			}
 		}
-	});
+	},
 };
+
+export default event;

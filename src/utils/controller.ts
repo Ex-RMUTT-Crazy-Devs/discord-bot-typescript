@@ -10,8 +10,7 @@ import {
 	type SlashCommandBuilder,
 } from "discord.js";
 
-import { events } from "@/events/allEvents";
-
+import { RegisterEvents } from "@/utils/events";
 import { Logs } from "@/utils/logs";
 
 Logs.info("Running in", env.NODE_ENV);
@@ -27,9 +26,7 @@ export const client = new Client({
 });
 
 // Event
-for (const registerEvent of events) {
-	registerEvent(client);
-}
+RegisterEvents(client);
 
 export const commands = new Collection<
 	string,

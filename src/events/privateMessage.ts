@@ -1,9 +1,14 @@
-import { type Client, Events } from "discord.js";
+import { Events } from "discord.js";
 import { Logs } from "@/utils/logs";
 import { env } from "@/env";
+import type { Event } from "@/utils/events";
 
-export default (client: Client) => {
-	client.on(Events.MessageCreate, async (message) => {
+const type = Events.MessageCreate;
+
+const event: Event<typeof type> = {
+	name: type,
+	once: false,
+	execute: async (message) => {
 		if (message.author.bot) return;
 
 		if (message.channelId !== env.BOT_SEND_MSG_CHANNEL_ID) return;
@@ -39,5 +44,7 @@ export default (client: Client) => {
 		} catch (error) {
 			Logs.error("[MessageCreate]", error);
 		}
-	});
+	},
 };
+
+export default event;

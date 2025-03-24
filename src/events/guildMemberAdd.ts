@@ -1,9 +1,14 @@
-import { type Client, Events } from "discord.js";
+import { Events } from "discord.js";
 import { Logs } from "@/utils/logs";
 import { env } from "@/env";
+import type { Event } from "@/utils/events";
 
-export default (client: Client) => {
-	client.on(Events.GuildMemberAdd, async (member) => {
+const type = Events.GuildMemberAdd;
+
+const event: Event<typeof type> = {
+	name: type,
+	once: false,
+	execute: async (member) => {
 		try {
 			const guild = member.guild;
 
@@ -19,5 +24,7 @@ export default (client: Client) => {
 		} catch (error) {
 			Logs.error("[guildMemberAdd]", error);
 		}
-	});
+	},
 };
+
+export default event;
