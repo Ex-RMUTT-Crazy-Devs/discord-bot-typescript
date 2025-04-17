@@ -41,6 +41,7 @@ const slashCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 	const commandPromises = [
 		import("@/commands/ping"),
 		import("@/commands/pong"),
+		import('@/commands/play')
 	];
 
 	const cmds = await Promise.all(commandPromises);
